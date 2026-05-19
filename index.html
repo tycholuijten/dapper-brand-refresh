@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Refresh — Dapper Agency</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #080808;
+      background-image: radial-gradient(circle, #1c1c1c 1px, transparent 1px);
+      background-size: 22px 22px;
+      color: #ffffff;
+      min-height: 100vh;
+      padding: 52px 48px 64px;
+    }
+
+    #pixelBg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body > *:not(#pixelBg) {
+      position: relative;
+      z-index: 1;
+    }
+
+    .pixel-corner {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      pointer-events: none;
+    }
+    .pixel-corner.top-right {
+      top: 14px; right: 14px;
+      background: rgba(99, 102, 241, 0.25);
+      box-shadow: -4px 0 0 rgba(99,102,241,0.15), -8px 0 0 rgba(99,102,241,0.07), 0 4px 0 rgba(99,102,241,0.15), -4px 4px 0 rgba(99,102,241,0.1), 0 8px 0 rgba(99,102,241,0.07);
+    }
+    .pixel-corner.neutral {
+      background: rgba(255,255,255,0.06);
+      box-shadow: -4px 0 0 rgba(255,255,255,0.04), -8px 0 0 rgba(255,255,255,0.02), 0 4px 0 rgba(255,255,255,0.04), -4px 4px 0 rgba(255,255,255,0.03);
+    }
+
+    /* HEADER */
+    .page-header {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+    .page-header .eyebrow {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #777;
+      margin-bottom: 12px;
+    }
+    .page-header h1 {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #ffffff 0%, #999 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .page-header .subtitle {
+      font-size: 14px;
+      color: #888;
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* OPTION TOGGLE */
+    .option-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      max-width: 1280px;
+      margin: 0 auto 44px;
+    }
+
+    .option-card {
+      background: #0c0c0c;
+      border: 1px solid #242424;
+      border-radius: 14px;
+      padding: 24px 28px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+      position: relative;
+    }
+    .option-card:hover {
+      border-color: #333;
+      transform: translateY(-1px);
+    }
+    .option-card.active {
+      background: linear-gradient(145deg, #12122e 0%, #0d0d1f 100%);
+      border-color: rgba(99, 102, 241, 0.4);
+      box-shadow: 0 0 60px rgba(99, 102, 241, 0.08), inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .option-tag {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #888;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid #2a2a2a;
+      padding: 4px 10px;
+      border-radius: 100px;
+      margin-bottom: 12px;
+    }
+    .option-card.active .option-tag {
+      color: #818cf8;
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    .option-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+    }
+
+    .option-meta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .option-pill {
+      font-size: 11px;
+      font-weight: 500;
+      color: #666;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid #222;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .option-card.active .option-pill {
+      color: #818cf8;
+      background: rgba(99, 102, 241, 0.07);
+      border-color: rgba(99, 102, 241, 0.15);
+    }
+
+    .option-highlights {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #1e1e1e;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .option-card.active .option-highlights {
+      border-color: rgba(99,102,241,0.1);
+    }
+    .highlight-tag {
+      font-size: 11px;
+      color: #555;
+      padding: 2px 0;
+    }
+    .highlight-tag::before {
+      content: '–  ';
+      color: #333;
+    }
+    .option-card.active .highlight-tag {
+      color: #666;
+    }
+    .option-card.active .highlight-tag::before {
+      color: rgba(99,102,241,0.4);
+    }
+
+    /* PHASES GRID */
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .phase-card {
+      background: #0e0e0e;
+      border: 1px solid #242424;
+      border-radius: 14px;
+      padding: 22px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .phase-card:hover {
+      border-color: #333;
+      transform: translateY(-2px);
+    }
+
+    .phase-number {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #3a3a3a;
+      margin-bottom: 5px;
+    }
+
+    .phase-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.2px;
+      line-height: 1.35;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #1e1e1e;
+    }
+
+    .phase-deliverable {
+      font-size: 12px;
+      line-height: 1.65;
+      color: #888;
+      flex: 1;
+      margin-bottom: 16px;
+    }
+
+    .phase-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .phase-hours {
+      font-size: 12px;
+      font-weight: 600;
+      color: #ccc;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid #2a2a2a;
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+
+    .phase-team {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #444;
+      text-align: right;
+    }
+
+    .phase-note {
+      font-size: 11px;
+      color: #555;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #1a1a1a;
+      line-height: 1.5;
+    }
+
+    /* SUMMARY */
+    .summary-section {
+      max-width: 1280px;
+      margin: 14px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .summary-card {
+      background: #0e0e0e;
+      border: 1px solid #242424;
+      border-radius: 14px;
+      padding: 22px 24px;
+    }
+    .summary-card--price {
+      background: linear-gradient(145deg, #0e1a0e 0%, #0a120a 100%);
+      border-color: rgba(74, 138, 74, 0.22);
+      box-shadow: 0 0 60px rgba(74, 138, 74, 0.04);
+    }
+
+    .summary-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .summary-card--price .summary-label { color: #4a8a4a; }
+
+    .summary-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .summary-card--price .summary-value { color: #6fcf6f; }
+
+    .summary-sub {
+      font-size: 12px;
+      color: #555;
+      margin-top: 4px;
+    }
+
+    /* CONNECTOR LINE */
+    .section-connector {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 1280px;
+      margin: 36px auto 14px;
+      height: 24px;
+    }
+    .section-connector::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      border-top: 1px dashed #242424;
+    }
+    .section-connector-label {
+      position: relative;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #4a8a4a;
+      background: #080808;
+      padding: 0 20px;
+      z-index: 1;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      margin-top: 44px;
+      font-size: 11px;
+      color: #555;
+      letter-spacing: 1px;
+    }
+
+    /* CONTENTEDITABLE */
+    [contenteditable] {
+      outline: none;
+      cursor: text;
+      border-radius: 3px;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+    [contenteditable]:hover { background: rgba(255,255,255,0.025); }
+    [contenteditable]:focus {
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35);
+    }
+
+    /* FADE IN ANIMATION */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .phases-grid.animate { animation: fadeUp 0.25s ease both; }
+    .summary-section.animate { animation: fadeUp 0.25s ease 0.06s both; }
+  </style>
+</head>
+<body>
+  <canvas id="pixelBg"></canvas>
+
+  <div class="page-header">
+    <div class="eyebrow">Dapper Agency — Proposal</div>
+    <h1>Brand Refresh</h1>
+    <p class="subtitle" contenteditable="true">Our model for repositioning your brand so it more clearly reflects your strategy, resonates with your audience, and supports future growth.</p>
+  </div>
+
+  <div class="option-toggle">
+    <div class="option-card" id="optA" onclick="selectOption('a')">
+      <div class="option-tag">Option A</div>
+      <div class="option-title" contenteditable="true">Top Level Refresh</div>
+      <div class="option-meta-row">
+        <span class="option-pill">~8 weeks</span>
+        <span class="option-pill">60–75 hrs</span>
+        <span class="option-pill">€7,800 – €9,750</span>
+      </div>
+      <div class="option-highlights">
+        <span class="highlight-tag">Tone of voice</span>
+        <span class="highlight-tag">Brand audit</span>
+        <span class="highlight-tag">Visual refinement</span>
+        <span class="highlight-tag">Asset updates</span>
+        <span class="highlight-tag">Brand guide</span>
+      </div>
+    </div>
+    <div class="option-card" id="optB" onclick="selectOption('b')">
+      <div class="pixel-corner top-right"></div>
+      <div class="option-tag">Option B</div>
+      <div class="option-title" contenteditable="true">In-Depth Refresh</div>
+      <div class="option-meta-row">
+        <span class="option-pill">~12 weeks</span>
+        <span class="option-pill">85–105 hrs</span>
+        <span class="option-pill">€11,050 – €13,650</span>
+      </div>
+      <div class="option-highlights">
+        <span class="highlight-tag">Full brand strategy</span>
+        <span class="highlight-tag">Logo redesign</span>
+        <span class="highlight-tag">2 visual concepts</span>
+        <span class="highlight-tag">Website mockups</span>
+        <span class="highlight-tag">Complete brand book</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="phases-grid" id="phasesGrid"></div>
+
+  <div class="section-connector">
+    <span class="section-connector-label" id="summaryLabel">Investment Summary</span>
+  </div>
+
+  <div class="summary-section" id="summarySection"></div>
+
+  <div class="footer">Click any text to edit — changes are saved in your browser</div>
+
+  <script>
+    const OPTIONS = {
+      a: {
+        phases: [
+          {
+            num: '01',
+            title: 'Messaging & Tone Refinement',
+            deliverable: 'Tighten language and tone of voice to ensure clarity and consistency across all brand communication.',
+            hours: '6–8 hrs',
+            team: 'Content',
+            note: ''
+          },
+          {
+            num: '02',
+            title: 'Brand Audit & Alignment',
+            deliverable: 'Review of current logo, colours, fonts, and visual tone. Short workshop with client to align on direction.',
+            hours: '8–10 hrs',
+            team: 'Design + Demand',
+            note: 'Audit'
+          },
+          {
+            num: '03',
+            title: 'Visual Refinement',
+            deliverable: 'Adapt the existing logo, improve the colour and typography system, and strengthen the overall design system.',
+            hours: '15–20 hrs',
+            team: 'Design',
+            note: ''
+          },
+          {
+            num: '04',
+            title: 'Asset Updates',
+            deliverable: 'Brand roll-out across social, presentations, web banners, and other key touchpoints.',
+            hours: '15–20 hrs',
+            team: 'Design',
+            note: 'Subject to number of assets'
+          },
+          {
+            num: '05',
+            title: 'Guidelines Refresh',
+            deliverable: 'A short, clear brand guide that defines the rules and explains the design system to your team.',
+            hours: '10–15 hrs',
+            team: 'Design',
+            note: ''
+          },
+          {
+            num: '06',
+            title: 'Client Reviews & Feedback',
+            deliverable: 'Structured regroup sessions, feedback rounds, and project admin to keep delivery on track.',
+            hours: '6–8 hrs',
+            team: 'Design + Demand',
+            note: ''
+          }
+        ],
+        summary: {
+          hours: '60–75 hrs',
+          timeline: '~8 weeks',
+          price: '€7,800 – €9,750'
+        }
+      },
+      b: {
+        phases: [
+          {
+            num: '01',
+            title: 'Messaging & Tone Refinement',
+            deliverable: 'Updated brand story, positioning, proposition, tone of voice, and key messaging — developed in parallel with the brand audit.',
+            hours: '10–12 hrs',
+            team: 'Content + Design',
+            note: 'Strategy phase, runs alongside Phase 02'
+          },
+          {
+            num: '02',
+            title: 'Brand Audit & Alignment',
+            deliverable: 'Deep review of your current visual identity and positioning workshop to identify improvement areas above the market benchmark.',
+            hours: '10–12 hrs',
+            team: 'Demand + Design + Content',
+            note: ''
+          },
+          {
+            num: '03',
+            title: 'Logo & Visual System Redesign',
+            deliverable: 'Redesign the logo, redefine typography, colour palette, and brand elements — delivered as 2 distinct visual concepts that answer the brief.',
+            hours: '20–30 hrs',
+            team: 'Design',
+            note: 'Main design investment'
+          },
+          {
+            num: '04',
+            title: 'Website Mockups (1–2 pages)',
+            deliverable: 'Concept-level homepage redesign showing the new look and feel in context. Static mockups — not a full web build.',
+            hours: '10–15 hrs',
+            team: 'Design',
+            note: 'Static mockups only'
+          },
+          {
+            num: '05',
+            title: 'Templates & Assets',
+            deliverable: 'Brand roll-out across presentation decks, social templates, and campaign visuals — a standardized set for your marketing team.',
+            hours: '10–15 hrs',
+            team: 'Design',
+            note: ''
+          },
+          {
+            num: '06',
+            title: 'Toolkit Rollout',
+            deliverable: 'A complete brand book covering brand guidelines and a full assets package — for internal teams and partners.',
+            hours: '10–12 hrs',
+            team: 'Design',
+            note: 'For internal and partner use'
+          },
+          {
+            num: '07',
+            title: 'Client Reviews & Feedback',
+            deliverable: 'Structured review sessions, feedback rounds, and project admin across all phases.',
+            hours: '8–10 hrs',
+            team: 'Design + Demand',
+            note: ''
+          }
+        ],
+        summary: {
+          hours: '85–105 hrs',
+          timeline: '~12 weeks',
+          price: '€11,050 – €13,650'
+        }
+      }
+    };
+
+    let currentOption = 'a';
+
+    function renderPhases(opt, animate) {
+      const grid = document.getElementById('phasesGrid');
+      const summaryEl = document.getElementById('summarySection');
+      const data = OPTIONS[opt];
+
+      grid.innerHTML = '';
+      data.phases.forEach((phase, i) => {
+        const card = document.createElement('div');
+        card.className = 'phase-card';
+        card.innerHTML = `
+          <div class="pixel-corner neutral" style="top:14px;right:14px;"></div>
+          <div class="phase-number">Phase ${phase.num}</div>
+          <div class="phase-title" contenteditable="true" data-eid="${opt}-p${i}-title">${phase.title}</div>
+          <div class="phase-deliverable" contenteditable="true" data-eid="${opt}-p${i}-del">${phase.deliverable}</div>
+          <div class="phase-footer">
+            <span class="phase-hours" contenteditable="true" data-eid="${opt}-p${i}-hrs">${phase.hours}</span>
+            <span class="phase-team" contenteditable="true" data-eid="${opt}-p${i}-team">${phase.team}</span>
+          </div>
+          ${phase.note ? `<div class="phase-note" contenteditable="true" data-eid="${opt}-p${i}-note">${phase.note}</div>` : ''}
+        `;
+        grid.appendChild(card);
+      });
+
+      summaryEl.innerHTML = `
+        <div class="summary-card">
+          <div class="summary-label">Total Hours</div>
+          <div class="summary-value" contenteditable="true" data-eid="${opt}-sum-hours">${data.summary.hours}</div>
+          <div class="summary-sub">Estimated across all phases</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Timeline</div>
+          <div class="summary-value" contenteditable="true" data-eid="${opt}-sum-timeline">${data.summary.timeline}</div>
+          <div class="summary-sub">From kickoff to delivery</div>
+        </div>
+        <div class="summary-card summary-card--price">
+          <div class="summary-label">Investment</div>
+          <div class="summary-value" contenteditable="true" data-eid="${opt}-sum-price">${data.summary.price}</div>
+          <div class="summary-sub">Based on €130/hr</div>
+        </div>
+      `;
+
+      if (animate) {
+        grid.classList.remove('animate');
+        summaryEl.classList.remove('animate');
+        void grid.offsetWidth;
+        grid.classList.add('animate');
+        summaryEl.classList.add('animate');
+      }
+
+      loadEdits();
+    }
+
+    function selectOption(opt) {
+      if (opt === currentOption) return;
+      currentOption = opt;
+      document.getElementById('optA').classList.toggle('active', opt === 'a');
+      document.getElementById('optB').classList.toggle('active', opt === 'b');
+      renderPhases(opt, true);
+    }
+
+    /* ── localStorage ── */
+    function saveEdits() {
+      const data = {};
+      document.querySelectorAll('[data-eid]').forEach(el => {
+        data[el.dataset.eid] = el.innerHTML;
+      });
+      const existing = JSON.parse(localStorage.getItem('dapper-brand-edits-v1') || '{}');
+      Object.assign(existing, data);
+      localStorage.setItem('dapper-brand-edits-v1', JSON.stringify(existing));
+    }
+
+    function loadEdits() {
+      const saved = localStorage.getItem('dapper-brand-edits-v1');
+      if (!saved) return;
+      const data = JSON.parse(saved);
+      document.querySelectorAll('[data-eid]').forEach(el => {
+        if (data[el.dataset.eid] !== undefined) el.innerHTML = data[el.dataset.eid];
+      });
+    }
+
+    document.addEventListener('input', saveEdits);
+
+    /* ── Pixel background ── */
+    function initPixels() {
+      const canvas = document.getElementById('pixelBg');
+      const ctx = canvas.getContext('2d');
+      function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const SIZE = 24, STEP = 24;
+      const G = [110, 231, 136];
+
+      const FORMATIONS = [
+        [[0,0],[1,0],[0,1],[1,1],[2,1],[0,2],[2,2],[0,3],[1,3]],
+        [[1,0],[2,0],[0,1],[1,1],[2,1],[3,1],[0,2],[3,2],[1,3]],
+        [[0,0],[1,0],[1,1],[2,1],[3,1],[2,2],[3,2],[2,3]],
+        [[1,0],[0,1],[1,1],[2,1],[0,2],[2,2],[1,3],[1,4]],
+        [[0,0],[0,1],[1,1],[2,1],[2,0],[1,2],[0,2],[1,3]],
+      ];
+
+      const ZONES = [
+        { x:[0.02,0.12], y:[0.06,0.20] },
+        { x:[0.88,0.97], y:[0.10,0.25] },
+        { x:[0.88,0.97], y:[0.50,0.62] },
+        { x:[0.02,0.12], y:[0.60,0.75] },
+        { x:[0.87,0.97], y:[0.72,0.86] },
+        { x:[0.44,0.56], y:[0.44,0.56] },
+      ];
+
+      function makeCluster(zone) {
+        const f = FORMATIONS[Math.floor(Math.random() * FORMATIONS.length)];
+        return {
+          x: zone.x[0]*canvas.width + Math.random()*Math.max(0,(zone.x[1]-zone.x[0])*canvas.width - STEP*4),
+          y: zone.y[0]*canvas.height + Math.random()*Math.max(0,(zone.y[1]-zone.y[0])*canvas.height - STEP*5),
+          pixels: f.map(([dx,dy]) => ({ dx, dy, alpha: Math.random()*0.7, target: Math.random()*0.8, speed: 0.004+Math.random()*0.008 }))
+        };
+      }
+
+      const clusters = ZONES.map(z => makeCluster(z));
+
+      function tick() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        clusters.forEach(c => {
+          c.pixels.forEach(px => {
+            if (Math.abs(px.alpha - px.target) < 0.02) {
+              px.target = Math.random() < 0.25 ? 0 : 0.2 + Math.random()*0.65;
+              px.speed = 0.003 + Math.random()*0.008;
+            }
+            px.alpha += (px.target - px.alpha) * px.speed;
+            if (px.alpha > 0.02) {
+              ctx.fillStyle = `rgba(${G[0]},${G[1]},${G[2]},${px.alpha})`;
+              ctx.fillRect(c.x + px.dx*STEP, c.y + px.dy*STEP, SIZE, SIZE);
+            }
+          });
+        });
+        requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    window.addEventListener('load', () => {
+      initPixels();
+      // Default to option A selected
+      document.getElementById('optA').classList.add('active');
+      renderPhases('a', false);
+      loadEdits();
+    });
+  </script>
+</body>
+</html>
