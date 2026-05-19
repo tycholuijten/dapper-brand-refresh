@@ -668,18 +668,43 @@
 
       function makeCluster(zone) {
         const f = FORMATIONS[Math.floor(Math.random() * FORMATIONS.length)];
+        const xMin = zone.x[0]*canvas.width;
+        const xMax = Math.max(xMin, zone.x[1]*canvas.width - STEP*4);
+        const yMin = zone.y[0]*canvas.height;
+        const yMax = Math.max(yMin, zone.y[1]*canvas.height - STEP*5);
+        const angle = Math.random() * Math.PI * 2;
+        const spd = 0.12 + Math.random() * 0.18;
         return {
-          x: zone.x[0]*canvas.width + Math.random()*Math.max(0,(zone.x[1]-zone.x[0])*canvas.width - STEP*4),
-          y: zone.y[0]*canvas.height + Math.random()*Math.max(0,(zone.y[1]-zone.y[0])*canvas.height - STEP*5),
-          pixels: f.map(([dx,dy]) => ({ dx, dy, alpha: Math.random()*0.7, target: Math.random()*0.8, speed: 0.004+Math.random()*0.008 }))
+          x: xMin + Math.random()*(xMax - xMin),
+          y: yMin + Math.random()*(yMax - yMin),
+          vx: Math.cos(angle) * spd,
+          vy: Math.sin(angle) * spd,
+          xMin, xMax, yMin, yMax,
+          pixels: f.map(([dx,dy]) => ({
+            dx, dy,
+            alpha: Math.random()*0.7,
+            target: Math.random()*0.8,
+            speed: 0.004 + Math.random()*0.008,
+            phase: Math.random()*Math.PI*2,
+            freq: 0.0003 + Math.random()*0.0004,
+            amp: 2 + Math.random()*4
+          }))
         };
       }
 
       const clusters = ZONES.map(z => makeCluster(z));
+      let t = 0;
 
       function tick() {
+        t++;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         clusters.forEach(c => {
+          // Drift cluster position, bounce off zone edges
+          c.x += c.vx;
+          c.y += c.vy;
+          if (c.x <= c.xMin || c.x >= c.xMax) { c.vx *= -1; c.x = Math.min(Math.max(c.x, c.xMin), c.xMax); }
+          if (c.y <= c.yMin || c.y >= c.yMax) { c.vy *= -1; c.y = Math.min(Math.max(c.y, c.yMin), c.yMax); }
+
           c.pixels.forEach(px => {
             if (Math.abs(px.alpha - px.target) < 0.02) {
               px.target = Math.random() < 0.25 ? 0 : 0.2 + Math.random()*0.65;
@@ -687,8 +712,11 @@
             }
             px.alpha += (px.target - px.alpha) * px.speed;
             if (px.alpha > 0.02) {
+              // Subtle per-pixel wobble
+              const wx = Math.sin(t * px.freq + px.phase) * px.amp;
+              const wy = Math.cos(t * px.freq * 0.7 + px.phase) * px.amp;
               ctx.fillStyle = `rgba(${G[0]},${G[1]},${G[2]},${px.alpha})`;
-              ctx.fillRect(c.x + px.dx*STEP, c.y + px.dy*STEP, SIZE, SIZE);
+              ctx.fillRect(c.x + px.dx*STEP + wx, c.y + px.dy*STEP + wy, SIZE, SIZE);
             }
           });
         });
